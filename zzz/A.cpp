@@ -7,7 +7,7 @@ using namespace std;
 #endif
 
 using ll = long long;
-using pi = pair<int, int>;
+using ii = pair<int, int>;
 using vec = vector<int>;
 
 #define for0(i, n) for(int i = 0; i < n; i++)
@@ -19,6 +19,7 @@ using vec = vector<int>;
 #define sz(x) (int)(x).size()
 #define all(x) (x).begin(), (x).end()
 #define CASE int _T; cin >> _T; for1(tt, _T)
+#define endl '\n'
 
 // DEBUG TEMPLATE (from tourist)
 template <typename A, typename B> 
@@ -52,11 +53,35 @@ void setup() {
     cout << "└---------------------------┘\n";
 #else
     cin.tie(0)->sync_with_stdio(0);
-    cin.exceptions(cin.failbit);
 #endif
 }
 
 /*-+-+-+-+-+-+-+-+-+- have fun -+-+-+-+-+-+-+-+-+-*/
+/* [ 0-index Frenwick Tree ]
+ *  宣告       : FT ft(maxn);
+ *  單點修改   : update(2, 50);    // a[2] = 50
+ *  查詢前綴和 : query(5);         // sum(a[0...5])
+ *  查詢區間和 : query(2, 6);      // sum(a[2...6])
+ */
+struct FT {
+    vector<int> t;
+    FT(int n) : t(n) {}
+    void update(int k, int val) {
+        for(; k < (int)t.size(); k |= k + 1) t[k] += val;
+    }
+    int query(int k) {
+        int res = 0;
+        for(k++; k > 0; k &= k - 1) res += t[k - 1];
+        return res;
+    }
+    int query(int l, int r) {
+        return query(r) - query(l - 1);
+    }
+};
 
 signed main() { setup();
+    FT ft(100);
+    ft.update(0, 20);
+    ft.update(3, 30);
+    wer(ft.query(4));
 }
